@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: aiops-agent-webhook
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  route:
+    groupBy: ['alertname']
+    groupWait: 5s
+    groupInterval: 5s
+    repeatInterval: 5m
+    receiver: 'aiops-webhook-receiver'
+  receivers:
+    - name: 'aiops-webhook-receiver'
+      webhookConfigs:
+        - url: 'http://host.docker.internal:8080/webhook'
+          sendResolved: true
